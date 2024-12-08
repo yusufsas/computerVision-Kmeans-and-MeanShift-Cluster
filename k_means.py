@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # Görüntüyü yükle
 image = cv2.imread('image.jpg')
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
+print("kmeans clustering")
 # Görüntüyü piksellere ayır ve 2D diziye dönüştür
 pixels = image.reshape(-1, 3)
 

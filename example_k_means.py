@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
 def initialize_centroids(data, k):
     """Veri içinden rastgele k merkez noktası seç"""
@@ -17,7 +18,8 @@ def update_centroids(data, labels, k):
     new_centroids = np.array([data[labels == i].mean(axis=0) for i in range(k)])
     return new_centroids
 
-def k_means(data, k, max_iters=100):
+def k_means(data, k, max_iters=5):
+    print(f"kmenasa girdi{max_iters}")
     centroids = initialize_centroids(data, k)
     for _ in range(max_iters):
         labels = assign_clusters(data, centroids)
@@ -37,20 +39,28 @@ pixels = image.reshape(-1, 3).astype(np.float32)
 # K-Means algoritmasını uygula
 k = 4
 centroids, labels = k_means(pixels, k)
-
+k_meansCV=KMeans(n_clusters=k)
+k_meansCV.fit(pixels)
+labelscv=k_meansCV.predict(pixels)
 # Segmentleri yeniden renklendir
 segmented_img = centroids[labels].reshape(image.shape).astype(np.uint8)
+segmented_img_cv = k_meansCV.cluster_centers_[labelscv].reshape(image.shape).astype(np.uint8)
 
 # Görüntüyü göster
 plt.figure(figsize=(12, 6))
-plt.subplot(1, 2, 1)
+plt.subplot(1, 3, 1)
 plt.title('Orijinal Görüntü')
 plt.imshow(image)
 plt.axis('off')
 
-plt.subplot(1, 2, 2)
+plt.subplot(1, 3, 2)
 plt.title('Segmented Görüntü')
 plt.imshow(segmented_img)
+plt.axis('off')
+
+plt.subplot(1, 3, 3)
+plt.title('Segmented Görüntü CV')
+plt.imshow(segmented_img_cv)
 plt.axis('off')
 
 plt.show()
